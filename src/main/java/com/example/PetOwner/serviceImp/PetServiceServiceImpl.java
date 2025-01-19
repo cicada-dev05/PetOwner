@@ -1,5 +1,6 @@
 package com.example.PetOwner.serviceImp;
 
+import com.example.PetOwner.dtos.ServiceBookRequestDTO;
 import com.example.PetOwner.model.PetService;
 import com.example.PetOwner.repositories.PetServiceRepository;
 import com.example.PetOwner.service.PetServiceService;
@@ -21,13 +22,13 @@ public class PetServiceServiceImpl implements PetServiceService {
 
     // Method to get all services
     public List<PetService> getAllServices() {
-        return serviceRepository.findAll();
+        return serviceRepository.findAllWithDeletedFlagFalse();
     }
 
     // Method to get a service by its ID
     public PetService getServiceById(Long serviceId) {
 
-        return serviceRepository.findByServiceId(serviceId);
+        return serviceRepository.findByServiceIdAndDeletedFlagFalse(serviceId);
     }
 
     // Method to create a new service
@@ -44,7 +45,7 @@ public class PetServiceServiceImpl implements PetServiceService {
 
     // Method to update an existing service
     public PetService updateService(Long serviceId, PetService serviceDetails) {
-        PetService updatedService = serviceRepository.findByServiceId(serviceId);
+        PetService updatedService = serviceRepository.findByServiceIdAndDeletedFlagFalse(serviceId);
             updatedService.setName(serviceDetails.getName());
             updatedService.setDescription(serviceDetails.getDescription());
             updatedService.setPrice(serviceDetails.getPrice());
@@ -57,7 +58,7 @@ public class PetServiceServiceImpl implements PetServiceService {
 
         Message message = new Message();
         if(null != serviceId){
-            PetService petService = serviceRepository.findByServiceId(serviceId);
+            PetService petService = serviceRepository.findByServiceIdAndDeletedFlagFalse(serviceId);
             if(null != petService){
                 petService.setDeletedFlag(true);
                 message.setCode(Constants.DELETED_CODE);

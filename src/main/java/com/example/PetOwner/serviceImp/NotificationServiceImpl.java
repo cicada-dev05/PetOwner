@@ -4,6 +4,7 @@ import com.example.PetOwner.dtos.NotificationDTO;
 import com.example.PetOwner.model.Notification;
 import com.example.PetOwner.repositories.NotificationRepository;
 import com.example.PetOwner.service.NotificationService;
+import com.example.PetOwner.utils.GeneralFunction;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationDTO getNotificationById(Long notificationId) {
-        Notification notification = notificationRepository.findByNotificationId(notificationId);
+        Notification notification = notificationRepository.findByNotificationIdAndDeletedFlagFalse(notificationId);
         if (notification == null) {
             throw new RuntimeException("Notification not found with ID: " + notificationId);
         }
@@ -46,7 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<NotificationDTO> getNotificationsByUserId(Long userId) {
-        List<Notification> notifications = notificationRepository.findByUserId(userId);
+        List<Notification> notifications = notificationRepository.findByUserIdAndDeletedFlagFalse(userId);
         return notifications.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
@@ -54,6 +55,7 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationDTO createNotification(NotificationDTO notificationDTO) {
         Notification notification = convertToEntity(notificationDTO);
         notification.setCreatedTs(LocalDateTime.now());
+        notification.setNotificationId(GeneralFunction.generateId());
         Notification savedNotification = notificationRepository.save(notification);
         return convertToDTO(savedNotification);
     }

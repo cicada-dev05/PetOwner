@@ -12,4 +12,8 @@ public interface PetsRepositories extends MongoRepository<Pets,String> {
 
     @Query("{ 'ownerId' : ?0, 'deletedFlag' : false }")
     List<Pets> findByOwnerId(Long ownerId);
+
+    List<Pets> findByOwnerIdAndDeletedFlagFalse(Long ownerId);
+
+    Pets findByPetIdAndDeletedFlagFalse(Long petId);
 }

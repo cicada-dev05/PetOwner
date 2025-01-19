@@ -35,7 +35,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public List<SubscriptionDTO> getAllSubscriptions() {
-        List<Subscription> subscriptions = subscriptionRepository.findAll();
+        List<Subscription> subscriptions = subscriptionRepository.findAllAndDeletedFlagFalse();
         return subscriptions.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 

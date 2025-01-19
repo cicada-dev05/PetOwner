@@ -45,14 +45,14 @@ public class PetsServiceImpl implements PetsService {
     @Override
     public List<PetsDTO> getAllPets(Long ownerId) {
 
-        List<Pets> petsList = petsRepositories.findByOwnerId(ownerId);
+        List<Pets> petsList = petsRepositories.findByOwnerIdAndDeletedFlagFalse(ownerId);
         List<PetsDTO> petsDTOS = petsList.stream().map(pets -> modelMapper.map(pets,PetsDTO.class)).toList();
         return petsDTOS;
     }
 
     @Override
     public Message updatePets(PetsDTO petsDTO) {
-        Pets pets = petsRepositories.findByPetId(petsDTO.getPetId());
+        Pets pets = petsRepositories.findByPetIdAndDeletedFlagFalse(petsDTO.getPetId());
         Message message = new Message();
         if(null != pets){
             pets.setUpdatedTs(LocalDateTime.now());
@@ -77,7 +77,7 @@ public class PetsServiceImpl implements PetsService {
     @Override
     public Message deletePets(Long petId) {
 
-        Pets pets = petsRepositories.findByPetId(petId);
+        Pets pets = petsRepositories.findByPetIdAndDeletedFlagFalse(petId);
         Message message = new Message();
 
         if(null != pets && !pets.getDeletedFlag()){
