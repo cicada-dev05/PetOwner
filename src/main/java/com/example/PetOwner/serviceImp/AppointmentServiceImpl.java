@@ -35,7 +35,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDTO getAppointmentById(Long appointmentId) {
-        Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId);
+        Appointment appointment = appointmentRepository.findByAppointmentIdAndDeletedFlagFalse(appointmentId);
 
         AppointmentDTO appointmentDTO = modelMapper.map(appointment, AppointmentDTO.class);
         return appointmentDTO;
@@ -60,7 +60,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Message message = new Message();
         if(null != appointmentId){
-            Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId);
+            Appointment appointment = appointmentRepository.findByAppointmentIdAndDeletedFlagFalse(appointmentId);
             if(null != appointment){
                 appointment.setAppointmentDate(appointmentDTO.getAppointmentDate());
                 appointment.setAppointmentTime(appointmentDTO.getAppointmentTime());
@@ -82,7 +82,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Message deleteAppointment(Long appointmentId) {
 
         Message message = new Message();
-        Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId);
+        Appointment appointment = appointmentRepository.findByAppointmentIdAndDeletedFlagFalse(appointmentId);
 
         if(null != appointment){
             appointment.setDeletedFlag(true);

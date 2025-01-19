@@ -18,7 +18,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepositories userRepositories;
 
-    private final Random random = new Random();
 
     @Override
     public UserDTO addUser(User user) throws InvalidMidiDataException {
@@ -26,10 +25,9 @@ public class UserServiceImpl implements UserService {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         user.setDeletedFlag(false);
-        User userRepo  = userRepositories.save(user);
         Long userId = GeneralFunction.generateId();
-        userRepo.setUserId(userId);
-        userRepositories.save(userRepo);
+        user.setUserId(userId);
+        User userRepo  = userRepositories.save(user);
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(userId);
         userDTO.setName(userRepo.getName());
@@ -39,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User getUser(Long userId){
-        User user =  userRepositories.findByUserId(userId).orElse(null);
+        User user =  userRepositories.findByUserIdAndDeletedFlagFalse(userId);
         return user;
     }
 }

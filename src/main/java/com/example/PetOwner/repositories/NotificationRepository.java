@@ -10,4 +10,8 @@ public interface NotificationRepository extends MongoRepository<Notification, St
     Notification findByNotificationId(Long notificationId);
 
     List<Notification> findByUserId(Long userId);
+
+    List<Notification> findByUserIdAndDeletedFlagFalse(Long userId);
+
+    Notification findByNotificationIdAndDeletedFlagFalse(Long notificationId);
 }
